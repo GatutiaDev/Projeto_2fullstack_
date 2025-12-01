@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
+const mongoSanitize = require('express-mongo-sanitize');
 
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(morgan('dev'));
 app.use(helmet());
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
 app.use(limiter);
+
 
 app.get('/', (req, res) => {
     res.json({ message: "Servidor Online!" });
