@@ -2,8 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Personagem = require('../models/Personagem');
 const auth = require('../config/auth');
-const NodeCache = require('node-cache');
-const cache = new NodeCache({ stdTTL: 60 });
+const redisClient = require('../config/redis');
 
 router.get('/busca', auth, async (req, res) => {
     try {
@@ -11,11 +10,13 @@ router.get('/busca', auth, async (req, res) => {
         if (!nome) return res.status(400).json({ erro: "Digite um nome" });
 
         const key = `busca_${nome.toLowerCase()}`;
-        const cachedData = cache.get(key);
+
+        
+        const cachedData = await redisClient.get(key);
 
         if (cachedData) {
-            console.log(`Cache: ${nome}`); 
-            return res.json(cachedData);
+            console.log(`Cache Redis: ${nome}`);
+            return res.json(JSON.parse(cachedData));
         }
 
         
@@ -25,8 +26,9 @@ router.get('/busca', auth, async (req, res) => {
 
         if (!personagem) return res.status(404).json({ erro: "Personagem não encontrado no seu banco." });
 
-        cache.set(key, personagem);
-
+        await redisClient.set(key, JSON.stringify(personagem), {
+            EX: 60
+        });
         res.json(personagem);
     } catch (error) {
         res.status(500).json({ erro: "Erro interno" });

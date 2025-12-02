@@ -1,0 +1,23 @@
+services:
+  mongodb:
+    image: mongo:6.0 # Ou 'latest', mas fixar a versão é mais seguro
+    container_name: mongodb_projeto
+    restart: always
+    ports:
+      - "27017:27017" # Mapeia a porta do container para a sua máquina
+    volumes:
+      - mongo_data:/data/db # Cria um volume para não perder dados ao desligar o container
+    # Descomente abaixo se quiser definir usuário e senha (recomendado para produção)
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: admin
+    #   MONGO_INITDB_ROOT_PASSWORD: password123
+  redis:
+    image: redis:alpine  # Versão leve (Alpine) baseada na nossa conversa sobre imagens
+    container_name: redis_projeto
+    restart: always
+    ports:
+      - "6379:6379"
+
+
+volumes:
+  mongo_data:
