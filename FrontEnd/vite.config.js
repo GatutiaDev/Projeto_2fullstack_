@@ -8,6 +8,13 @@ export default defineConfig({
     react(),
     viteCompression()
   ],
+  server: {
+    https: {
+      key: '../cert/localhost-key.pem',
+      cert: '../cert/localhost.pem'
+    },
+    port: 5173,
+  },
 
   base: "/",
 })

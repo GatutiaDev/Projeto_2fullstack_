@@ -7,7 +7,7 @@ const client = redis.createClient({
 client.on('error', (err) => console.log('Redis Client Error', err));
 client.on('connect', () => console.log('Conectado ao Redis!'));
 
-// Conecta assim que o arquivo é carregado
+
 client.connect();
 
 module.exports = client;
